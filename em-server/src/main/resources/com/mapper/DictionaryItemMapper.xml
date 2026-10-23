@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.DictionaryItemMapper">
+
+    <select id="selectByTypeCode" resultType="DictionaryItem">
+        SELECT * FROM 系统_字典项表 WHERE 类型编码 = #{typeCode}
+    </select>
+    <select id="selectById" resultType="DictionaryItem">
+        SELECT * FROM 系统_字典项表 WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="DictionaryItem">
+        INSERT INTO 系统_字典项表 (类型编码, 字典编码, 字典项, 字典描述)
+        VALUES (#{类型编码}, #{字典编码}, #{字典项}, #{字典描述})
+    </insert>
+    <update id="update" parameterType="DictionaryItem">
+        UPDATE 系统_字典项表
+        SET 类型编码 = #{类型编码},
+            字典编码 = #{字典编码},
+            字典项 = #{字典项},
+            字典描述 = #{字典描述}
+        WHERE id = #{id}
+    </update>
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM 系统_字典项表 WHERE id = #{id}
+    </delete>
+
+    <select id="selectAll" resultType="DictionaryItem">
+        SELECT * FROM 系统_字典项表
+    </select>
+</mapper>

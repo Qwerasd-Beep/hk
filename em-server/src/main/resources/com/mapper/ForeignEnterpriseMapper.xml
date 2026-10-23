@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ForeignEnterpriseMapper">
+
+    <!-- 插入企业信息 -->
+    <insert id="insert" parameterType="ForeignEnterprise">
+        INSERT INTO `外企监测_企业库_企业信息` (
+            `录入时间`, `录入人`, `录入人部门id`, `数据来源`, `是否已删除`,
+            `用户表主键id`, `企业状态`, `企业代码`, `企业名称`, `新批或变更`,
+            `企业类型ID`, `行业门类`, `所属行业`, `行业代码`, `是否高技术产业`,
+            `统计部门`, `成立日期`, `设立方式`, `企业地址`, `经营范围`,
+            `联系人`, `固定电话`, `联系电话`, `邮箱`, `投资总额`,
+            `注册资本`, `外商出资金额`, `外商出资增减`, `投资者名称`,
+            `国别或地区`, `资金来源地`, `出资比例`
+        ) VALUES (
+                     #{录入时间}, #{录入人}, #{录入人部门id}, #{数据来源}, #{是否已删除},
+                     #{用户表主键id}, #{企业状态}, #{企业代码}, #{企业名称}, #{新批或变更},
+                     #{enterpriseType.id}, #{行业门类}, #{所属行业}, #{行业代码}, #{是否高技术产业},
+                     #{统计部门}, #{成立日期}, #{设立方式}, #{企业地址}, #{经营范围},
+                     #{联系人}, #{固定电话}, #{联系电话}, #{邮箱}, #{投资总额},
+                     #{注册资本}, #{外商出资金额}, #{外商出资增减}, #{投资者名称},
+                     #{国别或地区}, #{资金来源地}, #{出资比例}
+                 )
+    </insert>
+
+    <!-- 根据主键删除企业信息 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM `外企监测_企业库_企业信息` WHERE id = #{id}
+    </delete>
+
+    <!-- 更新企业信息 -->
+    <update id="update" parameterType="ForeignEnterprise">
+        UPDATE `外企监测_企业库_企业信息`
+        SET
+            `录入时间` = #{录入时间},
+            `录入人` = #{录入人},
+            `录入人部门id` = #{录入人部门id},
+            `数据来源` = #{数据来源},
+            `是否已删除` = #{是否已删除},
+            `用户表主键id` = #{用户表主键id},
+            `企业状态` = #{企业状态},
+            `企业代码` = #{企业代码},
+            `企业名称` = #{企业名称},
+            `新批或变更` = #{新批或变更},
+            `企业类型ID` = #{enterpriseType.id},
+            `行业门类` = #{行业门类},
+            `所属行业` = #{所属行业},
+            `行业代码` = #{行业代码},
+            `是否高技术产业` = #{是否高技术产业},
+            `统计部门` = #{统计部门},
+            `成立日期` = #{成立日期},
+            `设立方式` = #{设立方式},
+            `企业地址` = #{企业地址},
+            `经营范围` = #{经营范围},
+            `联系人` = #{联系人},
+            `固定电话` = #{固定电话},
+            `联系电话` = #{联系电话},
+            `邮箱` = #{邮箱},
+            `投资总额` = #{投资总额},
+            `注册资本` = #{注册资本},
+            `外商出资金额` = #{外商出资金额},
+            `外商出资增减` = #{外商出资增减},
+            `投资者名称` = #{投资者名称},
+            `国别或地区` = #{国别或地区},
+            `资金来源地` = #{资金来源地},
+            `出资比例` = #{出资比例}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据主键查询企业信息 -->
+    <select id="selectById"   resultMap="ForeignEnterpriseResultMap">
+        SELECT a.*,b.id as 企业类型ID,b.类型名称 as 类型名称 FROM `外企监测_企业库_企业信息` a left join 外企监测_企业库_企业类型 b on a.企业类型ID=b.ID  WHERE a.id = #{id}
+    </select>
+
+
+
+<!--    定义EnterpriseType结果映射-->
+    <resultMap id="EnterpriseTypeResultMap" type="EnterpriseType">
+        <id property="id" column="企业类型ID"/>
+        <result property="类型名称" column="类型名称"/>
+    </resultMap>
+    <resultMap id="ForeignEnterpriseResultMap" type="ForeignEnterprise">
+        <id property="id" column="id"/>
+        <result property="录入时间" column="录入时间"/>
+        <result property="录入人" column="录入人"/>
+        <result property="录入人部门id" column="录入人部门id"/>
+        <result property="数据来源" column="数据来源"/>
+        <result property="是否已删除" column="是否已删除"/>
+        <result property="用户表主键id" column="用户表主键id"/>
+        <result property="企业状态" column="企业状态"/>
+        <result property="企业代码" column="企业代码"/>
+        <result property="企业名称" column="企业名称"/>
+        <result property="新批或变更" column="新批或变更"/>
+        <result property="行业门类" column="行业门类"/>
+        <result property="所属行业" column="所属行业"/>
+        <result property="行业代码" column="行业代码"/>
+        <result property="是否高技术产业" column="是否高技术产业"/>
+        <result property="统计部门" column="统计部门"/>
+        <result property="成立日期" column="成立日期"/>
+        <result property="设立方式" column="设立方式"/>
+        <result property="企业地址" column="企业地址"/>
+        <result property="经营范围" column="经营范围"/>
+        <result property="联系人" column="联系人"/>
+        <result property="固定电话" column="固定电话"/>
+        <result property="联系电话" column="联系电话"/>
+        <result property="邮箱" column="邮箱"/>
+        <result property="投资总额" column="投资总额"/>
+        <result property="注册资本" column="注册资本"/>
+        <result property="外商出资金额" column="外商出资金额"/>
+        <result property="外商出资增减" column="外商出资增减"/>
+        <result property="投资者名称" column="投资者名称"/>
+        <result property="国别或地区" column="国别或地区"/>
+        <result property="资金来源地" column="资金来源地"/>
+        <result property="出资比例" column="出资比例"/>
+
+        <!-- 一对一关联 -->
+        <association property="enterpriseType" resultMap="EnterpriseTypeResultMap"></association>
+    </resultMap>
+
+    <!-- 查询所有企业信息 -->
+    <select id="selectAll" resultMap="ForeignEnterpriseResultMap">
+        SELECT a.*,b.id as 企业类型ID,b.类型名称 as 类型名称 FROM `外企监测_企业库_企业信息` a
+        left join 外企监测_企业库_企业类型 b on a.企业类型ID = b.ID
+        <where>
+            <if test="企业名称 != null and 企业名称 != ''">
+                AND a.`企业名称` LIKE CONCAT('%', #{企业名称}, '%')
+            </if>
+            <if test="所属行业 != null and 所属行业 != ''">
+                AND a.`所属行业` LIKE CONCAT('%', #{所属行业}, '%')
+            </if>
+            <if test="企业状态 != null and 企业状态 != ''">
+                AND a.`企业状态` = #{企业状态}
+            </if>
+
+            <if test="startTime != null">
+                AND a.`录入时间` >= #{startTime}
+            </if>
+            <if test="endTime != null">
+                AND a.`录入时间` &lt;= #{endTime}
+            </if>
+            <if test="企业类型ID !=null and 企业类型ID!=0">
+                and a.企业类型ID = #{企业类型ID}
+            </if>
+        </where>
+        order by a.id desc
+    </select>
+    
+    <select id="loadEnterpriseTypes" resultType="EnterpriseType">
+        select * from 外企监测_企业库_企业类型
+    </select>
+
+
+
+    <!-- 按国别或地区统计企业数量 -->
+    <select id="countByCountry" resultType="map">
+        SELECT `国别或地区` AS `名称`, COUNT(*) AS `数量`
+        FROM `外企监测_企业库_企业信息`
+        WHERE `是否已删除` = 0
+        GROUP BY `国别或地区`
+        ORDER BY `数量` DESC
+    </select>
+
+    <!-- 按所属行业统计企业数量 -->
+    <select id="countByIndustry" resultType="map">
+        SELECT `所属行业` AS `名称`, COUNT(*) AS `数量`
+        FROM `外企监测_企业库_企业信息`
+        WHERE `是否已删除` = 0
+        GROUP BY `所属行业`
+        ORDER BY `数量` DESC
+    </select>
+
+    <!-- AI 报表导出：全量未删除企业，按行业/国别模糊筛选，不分页 -->
+    <select id="selectAllForExport" resultMap="ForeignEnterpriseResultMap">
+        SELECT a.*, b.id as 企业类型ID, b.类型名称 as 类型名称
+        FROM `外企监测_企业库_企业信息` a
+        LEFT JOIN 外企监测_企业库_企业类型 b ON a.企业类型ID = b.ID
+        <where>
+            a.`是否已删除` = 0
+            <if test="industry != null and industry != ''">
+                AND a.`所属行业` LIKE concat('%', #{industry}, '%')
+            </if>
+            <if test="country != null and country != ''">
+                AND a.`国别或地区` LIKE concat('%', #{country}, '%')
+            </if>
+        </where>
+        ORDER BY a.id DESC
+    </select>
+
+
+
+</mapper>

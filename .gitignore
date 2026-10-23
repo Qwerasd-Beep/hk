@@ -1,0 +1,17 @@
+# 后端编译产物
+**/target/
+
+# 前端依赖、构建产物
+**/node_modules/
+**/dist/
+
+# IDEA 配置
+.idea/
+*.iml
+
+# 本地环境配置
+.env
+.env.*
+!.env.example
+
+/em-ui-backups/

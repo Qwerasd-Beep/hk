@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.LocalProjectInfoMapper">
+    <!-- 按拟开工年份汇总项目数量和总投资额 -->
+    <select id="sumInvestmentByYear" resultType="map">
+        SELECT 拟开工时间 AS `拟开工年份`,
+        COUNT(*) AS `项目数量`,
+        SUM(总投资额) AS `总投资额合计`,
+        SUM(总投资额折合美元) AS `总投资额折合美元合计`
+        FROM 地方项目_申报信息
+        GROUP BY 拟开工时间
+        ORDER BY 拟开工时间
+    </select>
+    <select id="selectById" resultType="com.entity.LocalProjectInfo">
+        SELECT * FROM `地方项目_申报信息` WHERE `id` = #{id}
+    </select>
+
+    <select id="selectAll" parameterType="com.entity.query.LocalProjectInfoQ"
+            resultType="com.entity.LocalProjectInfo">
+        SELECT * FROM `地方项目_申报信息`
+        <where>
+            <if test="项目名称 != null and 项目名称 != ''">
+                AND `项目名称` LIKE CONCAT('%', #{项目名称}, '%')
+            </if>
+            <if test="项目类型 != null and 项目类型 != ''">
+                AND `项目类型` = #{项目类型}
+            </if>
+            <if test="所属行业 != null and 所属行业 != ''">
+                AND `所属行业` = #{所属行业}
+            </if>
+            <if test="建设地点 != null and 建设地点 != ''">
+                AND `建设地点` LIKE CONCAT('%', #{建设地点}, '%')
+            </if>
+        </where>
+        ORDER BY `id` DESC
+    </select>
+
+    <update id="updateById" parameterType="com.entity.LocalProjectInfo">
+        UPDATE `地方项目_申报信息`
+        SET `总投资额` = #{总投资额},
+            `拟开工时间` = #{拟开工时间},
+            `拟建成时间` = #{拟建成时间},
+            `建设地点` = #{建设地点},
+            `建设规模及内容` = #{建设规模及内容}
+        WHERE `id` = #{id}
+    </update>
+</mapper>

@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.IntermediaryAgencyMapper">
+    <resultMap id="DicResultMap" type="com.entity.DictionaryItem">
+        <id property="id" column="字典项ID"/>
+        <result property="类型编码" column="类型编码"/>
+        <result property="字典编码" column="字典编码"/>
+        <result property="字典描述" column="字典描述"/>
+        <result property="字典项" column="字典项"/>
+    </resultMap>
+
+    <resultMap id="IntermediaryAgencyResultMap" type="IntermediaryAgency">
+        <id property="id" column="id"/>
+        <result property="中介机构名称" column="中介机构名称"/>
+        <result property="中介机构证照类型" column="中介机构证照类型"/>
+        <result property="中介机构证照号码" column="中介机构证照号码"/>
+        <result property="法定代表人" column="法定代表人"/>
+        <result property="联系人名称" column="联系人名称"/>
+        <result property="联系电话" column="联系电话"/>
+        <result property="联系手机" column="联系手机"/>
+        <result property="联系人邮箱" column="联系人邮箱"/>
+        <result property="传真" column="传真"/>
+        <result property="通讯地址" column="通讯地址"/>
+
+
+        <association property="有效标识" resultMap="DicResultMap"/>
+
+    </resultMap>
+
+    <!-- 查询所有中介机构信息 -->
+    <select id="findAll" resultMap="IntermediaryAgencyResultMap">
+        SELECT a.*, b.id 字典项ID ,b.类型编码,b.字典编码,b.字典描述,b.字典项  FROM 地方委托_中介机构 a
+        left join  系统_字典项表 b on a.有效标识=b.id
+        <where>
+            <if test="中介机构名称  != null and 中介机构名称!=''">
+                and a.中介机构名称 like concat ('%', #{中介机构名称}, '%')
+            </if>
+            <if test="中介机构证照类型  != null and 中介机构证照类型!=''">
+                and a.中介机构证照类型 like concat ('%', #{中介机构证照类型}, '%')
+            </if>
+
+            <if test="法定代表人  != null and 法定代表人!=''">
+                and a.法定代表人 =#{法定代表人}
+            </if>
+            <if test="联系人名称  != null and 联系人名称!=''">
+                and a.联系人名称 =#{中介机构证照号码}
+            </if>
+            <if test="联系电话  != null and 联系电话!=''">
+                and a.联系电话 =#{联系电话}
+            </if>
+            <if test="联系人邮箱  != null and 联系人邮箱!=''">
+                and a.联系人邮箱 =#{联系人邮箱}
+            </if>
+            <if test="中介机构证照号码  != null and 中介机构证照号码!=''">
+                and a.通讯地址 =#{通讯地址}
+            </if>
+            <if test="有效标识ID !=null">
+                and a.有效标识 =#{有效标识ID}
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <!-- 根据中介机构名称查询中介机构信息 -->
+    <select id="findByAgencyName" resultMap="IntermediaryAgencyResultMap">
+        SELECT * FROM 地方委托_中介机构 WHERE 中介机构名称 = #{中介机构名称}
+    </select>
+
+    <!-- 根据中介机构名称查询中介机构信息 -->
+    <select id="findByAgencyId" resultMap="IntermediaryAgencyResultMap">
+        SELECT * FROM 地方委托_中介机构 WHERE id = #{id}
+    </select>
+
+    <!-- 插入中介机构信息 -->
+    <insert id="insert" parameterType="IntermediaryAgency">
+        INSERT INTO 地方委托_中介机构 (
+            中介机构名称, 中介机构证照类型, 中介机构证照号码, 法定代表人,
+            联系人名称, 联系电话, 联系手机, 联系人邮箱, 传真, 通讯地址, 有效标识
+        ) VALUES (
+                     #{中介机构名称}, #{中介机构证照类型}, #{中介机构证照号码}, #{法定代表人},
+                     #{联系人名称}, #{联系电话}, #{联系手机}, #{联系人邮箱}, #{传真}, #{通讯地址}, #{有效标识.字典编码}
+                 )
+    </insert>
+
+    <!-- 根据中介机构名称更新中介机构信息 -->
+    <update id="update" parameterType="IntermediaryAgency">
+        UPDATE 地方委托_中介机构
+        SET 中介机构证照类型 = #{中介机构证照类型},
+            中介机构证照号码 = #{中介机构证照号码},
+            法定代表人 = #{法定代表人},
+            联系人名称 = #{联系人名称},
+            联系电话 = #{联系电话},
+            联系手机 = #{联系手机},
+            联系人邮箱 = #{联系人邮箱},
+            传真 = #{传真},
+            通讯地址 = #{通讯地址},
+            有效标识 = #{有效标识.字典编码}
+        WHERE 中介机构名称 = #{中介机构名称}
+    </update>
+
+    <!-- 根据中介机构名称删除中介机构信息 -->
+    <delete id="deleteByAgencyName" parameterType="java.lang.String">
+        DELETE FROM 地方委托_中介机构 WHERE 中介机构名称 = #{中介机构名称}
+    </delete>
+
+</mapper>

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Insert title here</title>
+    <script>
+        function send(){
+            const es=	new EventSource("/ai/dashscope-ask?msg="+msg.value)
+
+            es.onmessage=function(e){
+                div1.innerHTML+=e.data
+            }
+
+            /* 监听自定义事件 event:alert
+            es.addEventListener("alert", function(e){
+                console.log("告警：", e.data);
+            })*/
+
+            es.open=()=>console.log("连接成功")
+
+            es.onerror=(err)=>{
+                console.log("onerror 触发了");
+                es.close();
+            }
+
+            //手动关闭连接,不要写在这里,因为它是异步执行的,会先执行到这,出错
+            //es.close()
+        }
+    </script>
+</head>
+<body>
+<input id="msg" >
+<button onclick="send()" >发送</button>
+<div id='div1'></div>
+</body>
+</html>

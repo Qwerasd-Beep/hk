@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ApprovalProcessInfoMapper">
+    <resultMap id="DicResultMap" type="com.entity.DictionaryItem">
+        <id property="id" column="字典项ID"/>
+        <result property="类型编码" column="类型编码"/>
+        <result property="字典编码" column="字典编码"/>
+        <result property="字典描述" column="字典描述"/>
+        <result property="字典项" column="字典项"/>
+    </resultMap>
+
+    <resultMap id="ApprovalProcessInfoResultMap" type="ApprovalProcessInfo">
+        <id property="id" column="id"/>
+        <result property="ownerId" column="ownerId"/>
+        <result property="项目代码" column="项目代码"/>
+        <result property="审批事项ID" column="审批事项ID"/>
+        <result property="办理处室" column="办理处室"/>
+        <result property="办理状态" column="办理状态"/>
+        <result property="办理意见" column= "办理意见"/>
+        <result property="办理时间" column="办理时间"/>
+
+        <!-- 一对一关联映射 -->
+        <association property="有效标识" resultMap="DicResultMap"/>
+    </resultMap>
+
+    <!-- 插入操作 -->
+    <insert id="insert" parameterType="ApprovalProcessInfo">
+        INSERT INTO 地方审批_办理状信息表 (ownerId, 项目代码, 审批事项ID, 办理处室, 办理状态, 办理意见, 办理时间, 有效标识)
+        VALUES (#{ownerId}, #{项目代码}, #{审批事项ID}, #{办理处室}, #{办理状态}, #{办理意见}, #{办理时间}, #{有效标识.id})
+    </insert>
+
+    <!-- 删除操作 -->
+    <delete id="deleteById" parameterType="int">
+        DELETE FROM 地方审批_办理状信息表 WHERE id = #{id}
+    </delete>
+
+    <!-- 更新操作 -->
+    <update id="update" parameterType="ApprovalProcessInfo">
+        UPDATE 地方审批_办理状信息表
+        SET ownerId = #{ownerId},
+            项目代码 = #{项目代码},
+            审批事项ID = #{审批事项ID},
+            办理处室 = #{办理处室},
+            办理状态 = #{办理状态},
+            办理意见 = #{办理意见},
+            办理时间 = #{办理时间},
+            有效标识 = #{有效标识.id}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 根据 id 查询 -->
+    <select id="selectById" parameterType="int" resultType="ApprovalProcessInfo">
+        SELECT * FROM 地方审批_办理状信息表 WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有 -->
+    <select id="selectAll" resultMap="ApprovalProcessInfoResultMap">
+        SELECT  a.*,b.id 字典项ID ,b.类型编码,b.字典编码,b.字典描述,b.字典项  from  地方审批_办理状信息表 a
+                                                                                        left join  系统_字典项表 b on a.有效标识=b.id
+        <where>
+            ${filterAccSQL}
+        </where>
+    </select>
+
+    <!-- 按项目代码查询审批流转记录 -->
+    <select id="selectByProjectCode" resultMap="ApprovalProcessInfoResultMap">
+        SELECT  a.*,b.id 字典项ID ,b.类型编码,b.字典编码,b.字典描述,b.字典项  from  地方审批_办理状信息表 a
+                                                                                        left join  系统_字典项表 b on a.有效标识=b.id
+        WHERE a.项目代码 = #{projectCode}
+        ORDER BY a.办理时间
+    </select>
+
+    <!-- 按办理状态统计审批事项数量 -->
+    <select id="countByStatus" resultType="map">
+        SELECT 办理状态 AS `办理状态`, COUNT(*) AS `数量`
+        FROM 地方审批_办理状信息表
+        GROUP BY 办理状态
+        ORDER BY `数量` DESC
+    </select>
+
+</mapper>

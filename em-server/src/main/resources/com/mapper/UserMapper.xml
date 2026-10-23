@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserMapper">
+    <sql id="Base_Column_List">
+        id,name, password ,note , editTime
+    </sql>
+
+    <select id="loginByName"  resultType="userInfo">
+        select * from userInfo  where name = #{name}
+    </select>
+
+    <select id="getUserById"  resultType="userInfo">
+        select * from userInfo where id=#{id}
+    </select>
+
+    <select id="getUserList" resultType="userInfo">
+        select * from UserInfo userInfo
+        <where>
+            <if test="filterAccSQL != null and filterAccSQL != ''">
+                ${filterAccSQL}
+            </if>
+        </where>
+
+        order by id desc
+
+    </select>
+
+    <insert id="addUser">
+        insert into UserInfo (name, password, note)
+        values (#{name}, #{password}, #{note})
+    </insert>
+    
+    <update id="updateUser">
+        update UserInfo
+        <set>
+            name = #{name},
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            note = #{note},
+            editTime = #{editTime}
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteUser">
+        delete from userinfo where id = #{id}
+    </delete>
+
+    <delete id="batchDelete">
+        delete from userinfo where id in
+                             <foreach collection="ids" item="id" open="(" close=")" separator=",">
+                                 #{id}
+                             </foreach>
+    </delete>
+    <!-- AI 工具用：只读用户列表，不含密码列，绕过 @DataAccess 的 filterAccSQL 片段 -->
+    <select id="selectAllUsers" resultType="userInfo">
+        SELECT id, name, note, editTime FROM userInfo
+        <where>
+            <if test="keyword != null and keyword != ''">
+                and name like concat('%', #{keyword}, '%')
+            </if>
+        </where>
+        ORDER BY id DESC
+    </select>
+
+</mapper>

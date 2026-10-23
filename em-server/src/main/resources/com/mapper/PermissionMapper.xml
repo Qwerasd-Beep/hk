@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.PermissionMapper">
+    <select id="getMenusByUserIdAndParentId"  resultType="MenuInfo">
+        select * from  系统_菜单权限表 where id in
+                                             (select  distinct menuId from 系统_角色菜单表  where roleid in(select roleId  from 系统_用户角色表 where userId=#{userId}))
+                                         and parentId =#{parentId}
+    </select>
+    <!-- 查询某个用户有哪些角色 -->
+    <select id="getRoleListByUserId" resultType="RoleInfo">
+        SELECT a.*, b.id,b.roleName,b.roleCode, b.des  FROM 系统_用户角色表 a  left join 系统_角色表 b on a.roleId=b.id  where a.userId=#{userId}
+    </select>
+
+    <!-- 查询某个用户有哪些权限 -->
+    <select id="getMenusByUserId" resultType="MenuInfo">
+        select *  from 系统_菜单权限表 where  id in
+                                              ( select distinct menuId  from 系统_角色菜单表 where roleId in( select  roleId from 系统_用户角色表 where userId=#{userId}))
+    </select>
+    <select id="getRoleList"  resultType="RoleInfo">
+        select * from  系统_角色表
+    </select>
+    <select id="getMenuByParent"  resultType="MenuInfo">
+        select * from 系统_菜单权限表 where parentId=#{parentId}
+    </select>
+    <select id="getRoleMenuIdList" resultType="Integer">
+        select menuId from 系统_角色菜单表 where roleId=#{roleId}  order by id
+    </select>
+
+    <delete id="deleteRoleMenu">
+        delete  from 系统_角色菜单表 where roleId=#{roleId}
+    </delete>
+
+    <insert id="addRoleMenu">
+        insert into 系统_角色菜单表(roleId,menuId) values (#{roleId},#{menuId})
+    </insert>
+
+
+
+</mapper>
